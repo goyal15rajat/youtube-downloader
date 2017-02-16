@@ -4,10 +4,6 @@ A python3 GUI based youtube downloader package to download video in any availabl
 
 Python Libraries used -
 
-re
-urllib.request
-BeautifulSoup
-subprocess
-requests
+re , urllib.request , BeautifulSoup , subprocess , requests. 
 
 Playlist download functionality will be added soon!!
