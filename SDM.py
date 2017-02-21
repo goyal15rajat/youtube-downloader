@@ -31,12 +31,25 @@ if download_type == 'stand alone link':
 elif download_type == 'playlist':
 	t = 2
 	htmlurl = formatquery()
+	c = crawlUrl(t,htmlurl)
+	dict_playlist = c.crawlQuery()
+	videos_playlist=list(dict_playlist.keys())
+	videos_playlist = '""" FALSE """'.join(videos_playlist)
+	playlist_choice=subprocess.getstatusoutput('zenity --title="""video""" --list --radiolist --column """ """ --column """Playlist list""" FALSE """'+videos_playlist+'"""')[1].split("\n")[1]
+	c.getPlaylist_videos(playlist_choice)
+	#download_type = subprocess.getstatusoutput('zenity --title="vidoe quality" --list  --column "download type" "Download all" "choose some"')[1].split("\n")[1]
+	x = c.downloadallPlaylist()
+	print("yo!")
 else:
 	t = 3
 	htmlurl = geturl()
-	c = crawlUrl(t,htmlurl)
-	downloads = c.findQuality(htmlurl)
-	quality=list(downloads.keys())
-	quality = "' FALSE '".join(quality)	
-	quality_choice=subprocess.getstatusoutput("zenity --title='video quality' --list --radiolist --column '' --column 'video quality' FALSE 'default' FALSE '"+quality+"'")[1].split("\n")[1]
-	c.crawlQualitylink(quality_choice)
+	if '&list' in htmlurl :
+		print("Working")
+	else:
+		c = crawlUrl(t,htmlurl)
+		downloads = c.findQuality(htmlurl)
+		quality=list(downloads.keys())
+		quality = "' FALSE '".join(quality)	
+		quality_choice=subprocess.getstatusoutput("zenity --title='video quality' --list --radiolist --column '' --column 'video quality' FALSE 'default' FALSE '"+quality+"'")[1].split("\n")[1]
+		c.crawlQualitylink(quality_choice)
+		print("DONE")
