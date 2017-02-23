@@ -70,7 +70,7 @@ class crawlUrl(object):
 		for item in divs.find_all('li'):
 			s=item.a['href']
 			self.downloads[str(item.text)]=s
-		print(self.downloads)
+
 		
 		if 'MP3 NEW' in self.downloads.keys():
 			del self.downloads['MP3 NEW']
