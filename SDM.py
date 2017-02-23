@@ -12,6 +12,11 @@ def geturl():
 	Utubeurl=subprocess.getstatusoutput('zenity --entry --title="URL Box" --text="Enter URL" --entry-text "Youtube Url"')[1].split("\n")[1]	
 	return(Utubeurl)
 
+def getPlaylistdownload():
+	download_type = subprocess.getstatusoutput('zenity --title="vidoe download type" --list  --column "download type" "Download all" "choose some" "settings"')[1].split("\n")[1]
+	return(download_type)
+
+
 
 download_type = subprocess.getstatusoutput('zenity --title="vidoe quality" --list  --column "download type" "stand alone link" "playlist" "from url"')[1].split("\n")[1]
 if download_type == 'stand alone link':
@@ -27,7 +32,8 @@ if download_type == 'stand alone link':
 	quality = "' FALSE '".join(quality)	
 	quality_choice=subprocess.getstatusoutput("zenity --title='video quality' --list --radiolist --column '' --column 'video quality' FALSE 'default' FALSE '"+quality+"'")[1].split("\n")[1]
 	c.crawlQualitylink(quality_choice)
-	print("DONE")
+
+
 elif download_type == 'playlist':
 	t = 2
 	htmlurl = formatquery()
@@ -37,9 +43,38 @@ elif download_type == 'playlist':
 	videos_playlist = '""" FALSE """'.join(videos_playlist)
 	playlist_choice=subprocess.getstatusoutput('zenity --title="""video""" --list --radiolist --column """ """ --column """Playlist list""" FALSE """'+videos_playlist+'"""')[1].split("\n")[1]
 	c.getPlaylist_videos(playlist_choice)
-	#download_type = subprocess.getstatusoutput('zenity --title="vidoe quality" --list  --column "download type" "Download all" "choose some"')[1].split("\n")[1]
-	x = c.downloadallPlaylist()
-	print("yo!")
+	download_type = getPlaylistdownload()
+
+	quality_choice = 'default'
+	
+	while download_type == 'settings':
+		quality_setting = subprocess.getstatusoutput('zenity --title="video download type" --list  --column "quality settings" "default" "manual"')[1].split("\n")[1]
+		if quality_setting == 'default':
+			#Do something
+			downloads = c.selectLink()
+			quality=list(downloads.keys())
+			quality = "' FALSE '".join(quality)	
+			quality_choice=subprocess.getstatusoutput("zenity --title='video quality' --list --radiolist --column '' --column 'video quality' FALSE 'default' FALSE '"+quality+"'")[1].split("\n")[1]
+		else:
+			quality_choice = quality_setting
+		download_type = getPlaylistdownload()
+	
+	if download_type == "Download all":
+		c.downloadallPlaylist(quality_choice)
+	elif download_type == 'choose some':
+		c.selectPlaylist_videos(quality_choice)
+
+
+	# elif download_type == "settings":
+	# 	quality_setting = subprocess.getstatusoutput('zenity --title="video download type" --list  --column "quality settings" "default" "manual"')[1].split("\n")[1]
+	# 	if quality_setting = 'default':
+	# 		#Do something
+	# 		downloads = c.selectLink(playlist_choice)
+	# 		quality=list(downloads.keys())
+	# 		quality = "' FALSE '".join(quality)	
+	# 		quality_choice=subprocess.getstatusoutput("zenity --title='video quality' --list --radiolist --column '' --column 'video quality' FALSE 'default' FALSE '"+quality+"'")[1].split("\n")[1]
+	# 		x = c.downloadallPlaylist(quality_choice)
+
 else:
 	t = 3
 	htmlurl = geturl()
