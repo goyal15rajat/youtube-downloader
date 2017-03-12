@@ -93,6 +93,7 @@ class crawlUrl(object):
 				
 	
 	def downloadLink(self,req):
+		temp1=None
 		soup = BeautifulSoup(urlopen(req).read(),"html.parser")
 		download_name = (soup.find('div').h1.text).split('"')[1]
 		for item in soup.find_all('h1', attrs={'class' : 'sv-s-download-link start-download'}):
