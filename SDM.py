@@ -79,7 +79,7 @@ else:
 	t = 3
 	htmlurl = geturl()
 	if '&list' in htmlurl :
-		print("Working")
+		print("under development")
 	else:
 		c = crawlUrl(t,htmlurl)
 		downloads = c.findQuality(htmlurl)
