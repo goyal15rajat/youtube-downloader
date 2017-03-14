@@ -49,7 +49,7 @@ elif download_type == 'playlist':
 	
 	while download_type == 'settings':
 		quality_setting = subprocess.getstatusoutput('zenity --title="video download type" --list  --column "quality settings" "default" "manual"')[1].split("\n")[1]
-		if quality_setting == 'default':
+		if quality_setting != 'default':
 			#Do something
 			downloads = c.selectLink()
 			quality=list(downloads.keys())
@@ -64,22 +64,11 @@ elif download_type == 'playlist':
 	elif download_type == 'choose some':
 		c.selectPlaylist_videos(quality_choice)
 
-
-	# elif download_type == "settings":
-	# 	quality_setting = subprocess.getstatusoutput('zenity --title="video download type" --list  --column "quality settings" "default" "manual"')[1].split("\n")[1]
-	# 	if quality_setting = 'default':
-	# 		#Do something
-	# 		downloads = c.selectLink(playlist_choice)
-	# 		quality=list(downloads.keys())
-	# 		quality = "' FALSE '".join(quality)	
-	# 		quality_choice=subprocess.getstatusoutput("zenity --title='video quality' --list --radiolist --column '' --column 'video quality' FALSE 'default' FALSE '"+quality+"'")[1].split("\n")[1]
-	# 		x = c.downloadallPlaylist(quality_choice)
-
 else:
 	t = 3
 	htmlurl = geturl()
 	if '&list' in htmlurl :
-		print("under development")
+		print("Under construction")
 	else:
 		c = crawlUrl(t,htmlurl)
 		downloads = c.findQuality(htmlurl)
