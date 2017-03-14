@@ -6,4 +6,4 @@ Python Libraries used -
 
 re , urllib.request , BeautifulSoup , subprocess , requests. 
 
-Playlist download functionality will be added soon!!
+Download whole playlist in any format,with just one click.
