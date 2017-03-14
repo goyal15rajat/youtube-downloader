@@ -93,9 +93,9 @@ class crawlUrl(object):
 				
 	
 	def downloadLink(self,req):
-		temp1=None
 		soup = BeautifulSoup(urlopen(req).read(),"html.parser")
 		download_name = (soup.find('div').h1.text).split('"')[1]
+		temp1=None
 		for item in soup.find_all('h1', attrs={'class' : 'sv-s-download-link start-download'}):
 		    temp1=item.a['href']
 
@@ -120,15 +120,20 @@ class crawlUrl(object):
 		for item in divs.find_all('li', attrs={'class' : 'yt-uix-scroller-scroll-unit'}):
 			self.title_list[item['data-video-title']] = item['data-video-id']
 
+#for downloading playlist from url
+	def getPlaylist_videos_url(self,playlist_url):
+		print('oh yeah')
+		req = self.requestUrl(playlist_url)
+		soup = BeautifulSoup(urlopen(req).read(),"html.parser")
+		divs = soup.find('div', attrs={'class' : 'playlist-videos-container yt-scrollbar-dark yt-scrollbar'})
+		for item in divs.find_all('li', attrs={'class' : 'yt-uix-scroller-scroll-unit'}):
+			self.title_list[item['data-video-title']] = item['data-video-id']
 
 	def downloadallPlaylist(self,quality):
-		if quality == 'manual':
+		if quality != 'default':
 			#dosomething
 			for keys in self.title_list:
 				q = self.findQuality(self.title_list[keys])
-				quality=list(self.downloads.keys())
-				quality = "' FALSE '".join(quality)	
-				quality_choice=subprocess.getstatusoutput("zenity --title='video quality' --list --radiolist --column '' --column 'video quality' FALSE 'default' FALSE '"+quality+"'")[1].split("\n")[1]
 				self.crawlQualitylink(quality_choice)
 		else:
 			for keys in self.title_list:
@@ -139,15 +144,11 @@ class crawlUrl(object):
 		videos_playlist=list(self.title_list.keys())
 		videos_playlist = '""" FALSE """'.join(videos_playlist)
 		playlist_choice=subprocess.getstatusoutput('zenity --title="""video""" --list --checklist --column """ """ --column """Playlist list""" FALSE """'+videos_playlist+'"""')[1].split("\n")[1].split("|")
-		
-		if quality == 'manual':
+		print(playlist_choice)
+		if quality != 'default':
 			for title in playlist_choice:
-				print("here")
 				q = self.findQuality(self.title_list[title])
-				quality=list(self.downloads.keys())
-				quality = "' FALSE '".join(quality)	
-				quality_choice=subprocess.getstatusoutput("zenity --title='video quality' --list --radiolist --column '' --column 'video quality' FALSE 'default' FALSE '"+quality+"'")[1].split("\n")[1]
-				self.crawlQualitylink(quality_choice)
+				self.crawlQualitylink(quality)
 		else:
 			for title in playlist_choice:
 				q = self.findQuality(self.title_list[title])

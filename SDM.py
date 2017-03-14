@@ -68,7 +68,28 @@ else:
 	t = 3
 	htmlurl = geturl()
 	if '&list' in htmlurl :
-		print("Under construction")
+		c = crawlUrl(t,htmlurl)
+		c.getPlaylist_videos_url(htmlurl)
+		download_type = getPlaylistdownload()
+
+		quality_choice = 'default'
+		
+		while download_type == 'settings':
+			quality_setting = subprocess.getstatusoutput('zenity --title="video download type" --list  --column "quality settings" "default" "manual"')[1].split("\n")[1]
+			if quality_setting != 'default':
+				#Do something
+				downloads = c.selectLink()
+				quality=list(downloads.keys())
+				quality = "' FALSE '".join(quality)	
+				quality_choice=subprocess.getstatusoutput("zenity --title='video quality' --list --radiolist --column '' --column 'video quality' FALSE 'default' FALSE '"+quality+"'")[1].split("\n")[1]
+			else:
+				quality_choice = quality_setting
+			download_type = getPlaylistdownload()
+		
+		if download_type == "Download all":
+			c.downloadallPlaylist(quality_choice)
+		elif download_type == 'choose some':
+			c.selectPlaylist_videos(quality_choice)
 	else:
 		c = crawlUrl(t,htmlurl)
 		downloads = c.findQuality(htmlurl)
