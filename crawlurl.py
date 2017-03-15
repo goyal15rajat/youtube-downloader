@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 import subprocess
 import urllib.request as urlRequest
 import requests
+import time,sys
 
 class crawlUrl(object):
 
@@ -55,6 +56,7 @@ class crawlUrl(object):
 		choice = self.video_list[videos_choice]
 		quality = self.findQuality(choice)
 		return(quality)
+
 	def findQuality(self,videoslink):		
 
 		reg=re.compile('[a-zA-Z0-9-_]+$')
@@ -92,24 +94,6 @@ class crawlUrl(object):
 		self.downloadLink(req)
 				
 	
-	def downloadLink(self,req):
-		soup = BeautifulSoup(urlopen(req).read(),"html.parser")
-		download_name = (soup.find('div').h1.text).split('"')[1]
-		temp1=None
-		for item in soup.find_all('h1', attrs={'class' : 'sv-s-download-link start-download'}):
-		    temp1=item.a['href']
-
-
-		for item in soup.find_all('h1', attrs={'class' : 'sv-s-download-link'}):
-		    temp2="http://www.save-video.com/"+item.a['href']
-
-
-		if temp1 == None:
-			target = urllib.request.urlretrieve(temp2,download_name)
-		else:
-			r = requests.get(temp1)
-			target = urllib.request.urlretrieve(r.history[0].url,download_name)
-		print("downloaded "+download_name)
 
 	def getPlaylist_videos(self,playlist_choice):
 		title_list={}
@@ -162,4 +146,36 @@ class crawlUrl(object):
 		quality = self.findQuality(choice)
 		return(quality)
 
+	def reporthook(self,count, block_size, total_size):
+	    global start_time
+	    if count == 0:
+	        start_time = time.time()
+	        return
+	    duration = time.time() - start_time
+	    progress_size = int(count * block_size)
+	    speed = int(progress_size / (1024 * duration))
+	    percent = int(count * block_size * 100 / total_size)
+	    sys.stdout.write("\r...%d%%, %d MB, %d KB/s, %d seconds passed" %
+	                    (percent, progress_size / (1024 * 1024), speed, duration))
+	    sys.stdout.flush()
+
+	def downloadLink(self,req):
+		soup = BeautifulSoup(urlopen(req).read(),"html.parser")
+		download_name = (soup.find('div').h1.text).split('"')[1]
+		temp1=None
+		print('downloading--> ' + download_name )
+		for item in soup.find_all('h1', attrs={'class' : 'sv-s-download-link start-download'}):
+		    temp1=item.a['href']
+
+
+		for item in soup.find_all('h1', attrs={'class' : 'sv-s-download-link'}):
+		    temp2="http://www.save-video.com/"+item.a['href']
+
+
+		if temp1 == None:
+			target = urllib.request.urlretrieve(temp2,download_name,self.reporthook)
+		else:
+			r = requests.get(temp1)
+			target = urllib.request.urlretrieve(r.history[0].url,download_name,self.reporthook)
+		print("\ndownloaded "+download_name)
 

@@ -97,4 +97,3 @@ else:
 		quality = "' FALSE '".join(quality)	
 		quality_choice=subprocess.getstatusoutput("zenity --title='video quality' --list --radiolist --column '' --column 'video quality' FALSE 'default' FALSE '"+quality+"'")[1].split("\n")[1]
 		c.crawlQualitylink(quality_choice)
-		print("DONE")
