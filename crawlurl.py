@@ -118,7 +118,7 @@ class crawlUrl(object):
 			#dosomething
 			for keys in self.title_list:
 				q = self.findQuality(self.title_list[keys])
-				self.crawlQualitylink(quality_choice)
+				self.crawlQualitylink(quality)
 		else:
 			for keys in self.title_list:
 				q = self.findQuality(self.title_list[keys])
