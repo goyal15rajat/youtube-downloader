@@ -19,8 +19,8 @@ class crawlUrl(object):
 
 	def crawlQuery(self):
 		req = self.requestUrl(self.htmlUrl)
-		dict_link = self.crawlQueryUrl(req)
-		return(dict_link)
+		video_dict = self.crawlQueryUrl(req)
+		return(video_dict)
 
 
 	def requestUrl(self,htmlUrl):
@@ -47,13 +47,20 @@ class crawlUrl(object):
 		    		continue
 		    	else:
 		    		self.video_list[title]=full_link
-		if  self.urlType == 1:
-			return (self.video_list)
-		elif self.urlType == 2:
-			return(self.video_list)
+		return (self.video_list)
 
-	def selectLink(self,videos_choice):
+
+	def selectLink(self,videos_choice=None):
+		# print(videos_choice)
 		choice = self.video_list[videos_choice]
+		# print(choice)
+		quality = self.findQuality(choice)
+		return(quality)
+
+	def selectLinks(self):
+		# print(self.title_list)
+		choice = self.title_list[next(iter(self.title_list))]
+		# print(choice)
 		quality = self.findQuality(choice)
 		return(quality)
 
@@ -61,6 +68,7 @@ class crawlUrl(object):
 
 		reg=re.compile('[a-zA-Z0-9-_]+$')
 		r = reg.search(videoslink).group()
+		print(r)
 
 		save="http://www.save-video.com/download.php?s=magicyt&url=http%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D"+r
 
@@ -140,11 +148,6 @@ class crawlUrl(object):
 
 	# def qualitySettings(self,playlist_choice):
 	# 	choice = self.selectLink(playlist_choice)
-
-	def selectLink(self):
-		choice = self.title_list[next(iter(self.title_list))]
-		quality = self.findQuality(choice)
-		return(quality)
 
 	def reporthook(self,count, block_size, total_size):
 	    global start_time
